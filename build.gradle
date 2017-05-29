@@ -1,0 +1,58 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+group = pluginGroup
+version = pluginVersion
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+configurations {
+    embed
+    compile.extendsFrom(embed)
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'spigotmc-repo'
+        url = 'https://hub.spigotmc.org/nexus/content/groups/public/'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile 'org.spigotmc:spigot-api:1.11-R0.1-SNAPSHOT'
+    embed "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    embed 'com.squareup.retrofit2:retrofit:2.3.0'
+    embed 'com.squareup.retrofit2:converter-gson:2.3.0'
+}
+
+import org.apache.tools.ant.filters.ReplaceTokens
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        filter ReplaceTokens, tokens: [version: version]
+    }
+}
+buildscript {
+    ext.kotlin_version = '1.1.1'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+}
+
+jar {
+    from { configurations.embed.collect { it.isDirectory() ? it : zipTree(it) } }
+}

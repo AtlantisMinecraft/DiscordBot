@@ -1,0 +1,3 @@
+name: DiscordBot
+version: @version@
+main: net.atlantis.discordbot.DiscordBot
