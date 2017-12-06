@@ -1,6 +1,6 @@
 # DiscordBot
 
-Minecraft 1.11
+Minecraft 1.12.2
 
 # 機能
 
